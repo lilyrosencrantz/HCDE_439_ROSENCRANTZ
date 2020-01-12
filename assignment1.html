@@ -19,8 +19,12 @@
             <p>
             Here is all the documentation for assignment 1!
             <br>
-
+            <br>
             My code:
+            <br>
+            I wanted to make the lights blink both independently and at the same time. I wanted to be sure I knew 
+            how to make both of those things happen, so I made the blue and red lights blink at the same time 
+            between each of them blinking independently.
             <br>
             <pre><code>
             void setup() {
@@ -45,6 +49,24 @@
                 delay(100);                       // wait for 1/10 of a second
               }
             </code>
+            </p>
+            <img src="blink_circuit.jpg" width=400></a>
+           
+            <p>
+                <img src="blink_schematic.jpg" width=400></a>
+                <br>
+                To find the value of the resistors I calculated using the respective voltage drop values for the red and yellow, and blue LEDs.
+                <br>
+                For red and yellow LEDS I used the 220 ohm resistor by calculating the following:
+                <br>
+                5V-1.8V = 20mA * __ohms <br>
+                3.2V/0.02A = 160 ohms <br>
+                160 ohms was closest to the 220 ohm resistor, so I chose that one <br>
+                <br>
+                For the blue LED I used the 100 ohm resistor by calculating the following: <br>
+                5V-3.3V = 20mA * __ohms <br>
+                1.6V/0.02A = 80 ohms <br>
+                80 ohms was closest to the 100 ohm resistor, so I chose that one <br>
             </p>
         </div>
         
