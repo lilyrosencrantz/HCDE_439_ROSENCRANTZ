@@ -15,13 +15,71 @@
             <h1>Lily's Assignment 2!</h1>
             <p>
             Here is all the documentation for assignment 2!
-            </p> <br> <br> <br>
+            </p> <br>
             <p>
             <img src="Fade5.gif" width=400></a>
             </p>
             <p>You can see the use of the for loop in the brightening and then fading of the LEDs after I press the button; look at the light's glow on the breadboard rather than at the LED to notice the variation.</p>
-            <img src="Fade_schematic.jpg" width=400></a> <br> <br> 
-            <p>This is my schematic; I used two LEDs and a button, which required three resistors.</p>
+            <img src="Fade_schematic.jpg" width=600></a> <br> <br> 
+            <p>This is my schematic; I used two LEDs and a button, which required three resistors.</p><br>
+            <pre><code> 
+            // sets the pin number for the wire going to the button
+            const int buttonPin = 2;
+            // sets the red LED's pin #
+            const int redPin = 10;
+            // sets the yellow LED's pin #
+            const int yellowPin = 11;
+
+            // variable for reading the pushbutton status (comment from Button Example)
+            int buttonState = 0; 
+
+            void setup() {
+              // initialize red and yellow LED pins as output:
+              pinMode(redPin, OUTPUT);
+              pinMode(yellowPin, OUTPUT);
+              // inititalize the button's pin as input:
+              pinMode(buttonPin, INPUT);
+            }
+
+            // this is a function to make the LEDs blink
+            void blink() {
+                // red and yelow pins blink for 3/10 of a second
+                digitalWrite(redPin, HIGH); //
+                digitalWrite(yellowPin, HIGH);
+                delay(300);
+                // red and yellow pins turn off for 3/10 of a second
+                digitalWrite(redPin, LOW);
+                digitalWrite(yellowPin, LOW);
+                delay(300);
+            }
+
+            void loop() {
+              buttonState = digitalRead(buttonPin);
+              // put your main code here, to run repeatedly:
+              // this checks if the button is pressed (it will read HIGH if yes):
+              if (buttonState == HIGH) {
+                // make red and yellow LEDs brighten by incrementing between 0 (always on) and 255 (always off):
+                for(int i = 0; i < 256; i++){
+                  analogWrite(yellowPin, i);
+                  analogWrite(redPin, i);
+                  delay(10);
+                }
+                // make red and yellow LEDs fade by decreasing between 255 and 0:
+                for(int i = 250; i > 0; i--){
+                  // turns yellow LED on
+                  analogWrite(yellowPin, i);
+                  // turns red LED on
+                  analogWrite(redPin, i);
+                  // wait for 1/100 of a second
+                  delay(10);
+                }
+              // if the button is not pressed the LEDs go back to blinking
+              } else {
+                // make the red and yellow LEDs go back to blinking
+                blink();
+              }
+            }
+            </code>
 
         </div> <br> <br>
         
