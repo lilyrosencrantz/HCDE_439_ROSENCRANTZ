@@ -1,78 +1,77 @@
-            <code><!DOCTYPE html> 
-                <html> 
-                    <head> 
-                        <meta charset="utf-8"> 
-                        <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
-                
-                        <title>Lily's HCDE 439 Physical Computing Page!</title> 
-                
-                        <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
-                
-                    </head> 
-                    <body> 
-                        margin: 25px 50px 75px;
-                        <div class="header">
-                            <h1>Lily's Assignment 3!</h1>
-                            <br>Here is all the documentation for assignment 3! <br>
-                            
-                            <p>
-                            <img src="photoresist_gif.gif" width=400></a>
-                            </p> 
-                            This gif shows the operation of my circuit:<br>
-                            At different levels of light being read by the photoresistor, different things happen to the 
-                            LEDs. For bright light, like from overhead fluorescents, the red LED blinks slowly, on and off 
-                            for 400 milliseconds each. As the light reaching the photoresistor lessens, like when I cast 
-                            a shadow over it with my hand, the blinking goes faster, at 150 milliseconds each on and off. 
-                            When the photoresistor is in darkness, like when I covered it with my hand, the blinking is 
-                            very rapid, blinking on and off for 75 milliseconds each. <br>
-                            The yellow LED does not blink; rather, it gets brighter or dimmer along with the exposure 
-                            or shielding from light, respectively. <br>
-                            <p>
-                                <img src="circuit1.jpg" width=400></a>
-                                </p>
-                            <p>
-                            This image shows my circuit, which has two LEDs and a photoresistor. The LEDs have to be connected 
-                            to the pins with tildes (~) because these are the pins that allow for analogWrite()to write the 
-                            analog value measured by the photoresistor to the pin. <br>
-                                <img src="circuit2.jpg" width=400 class="rotateimg180"></a>
-                                </p>
-                            This is the side view of my circuit. <br>
-                            <p>
-                                <img src="schematic3.jpg" width=400 class="rotateimg180"></a>
-                                </p>
-                            <p>
-                            Here is my schematic. I learned the symbol for the photoresistor from electronics-notes.com. <br>
-                                <img src="initialCalc.jpg" width=400 class="rotateimg180"></a>
-                                </p>
-                            Lia Johansen/Prof. Nadya helped with this: <br>
-                            To find the resistor value to use with the photoresistor, I had to do some calculations using 
-                            the min and max resistance of the photoresistor, depending on the amount of light it is exposed to. 
-                            I used the multimeter to get the max and min values, measuring when the lights were on, and when 
-                            the room was dark. These are the values I read: <br>
-                            Rmin: 185 ohms <br>
-                            Rmax: 100k ohms <br> <br>
-                            
-                            Then, I went calculated the Vout values for both the low and high resistance values; then, I subtracted 
-                            Vout_low from Vout_high to get the voltage range; I was looking for the resistor that would allow analogRead() 
-                            to read the widest range possible. <br>
-                            I checked for 220 ohms, and the range was pretty small, so I went up to 100k ohms, and the range was also small. 
-                            Then, I went down to 2k ohms and the range was 4.47V. I did the calculation for 10k ohms, and the range was slightly 
-                            smaller than the 2k resistor, at 4.45V. <br>
-                            Even though the 10k resistor had a range that was a tiny bit smaller, I chose that resistor because I figured 
-                            using a higher resitor would be a safer bet, and the tiny difference in voltage range between 10k and 2k would 
-                            not make a visible difference.
-                            <p>
-                                <img src="10kcalc.jpg" width=400 class="rotateimg180"></a>
-                                </p>                            
-                            <p>
-                                There are my calculations for the 2k and 10k ohm resistors. <br> <br>
-                                <img src="red_yellow.jpg" width=400 class="rotateimg180"></a>
-                                </p>     
-                                Here is my calculation for the red and yellow LEDs' resistors.                    
-                                    
-                            <p>
-                            <br>Here is my code for this assignment: <br><br>
-                                <pre><code>
+<!DOCTYPE html> 
+<html> 
+    <head> 
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+        <title>Lily's HCDE 439 Physical Computing Page!</title> 
+
+        <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
+
+    </head> 
+    <body> 
+        <div class="header">
+            <h1>Lily's Assignment 3!</h1>
+            <br>Here is all the documentation for assignment 3! <br>
+            
+            <p>
+            <img src="photoresist_gif.gif" width=400></a>
+            </p> 
+            This gif shows the operation of my circuit:<br>
+            At different levels of light being read by the photoresistor, different things happen to the 
+            LEDs. For bright light, like from overhead fluorescents, the red LED blinks slowly, on and off 
+            for 400 milliseconds each. As the light reaching the photoresistor lessens, like when I cast 
+            a shadow over it with my hand, the blinking goes faster, at 150 milliseconds each on and off. 
+            When the photoresistor is in darkness, like when I covered it with my hand, the blinking is 
+            very rapid, blinking on and off for 75 milliseconds each. <br>
+            The yellow LED does not blink; rather, it gets brighter or dimmer along with the exposure 
+            or shielding from light, respectively. <br>
+            <p>
+                <img src="circuit1.jpg" width=400></a>
+                </p>
+            <p>
+            This image shows my circuit, which has two LEDs and a photoresistor. The LEDs have to be connected 
+            to the pins with tildes (~) because these are the pins that allow for analogWrite()to write the 
+            analog value measured by the photoresistor to the pin. <br> <br> <br>
+                <img src="circuit2.jpg" width=400></a>
+                </p>
+            This is the side view of my circuit. <br> <br>
+            <p>
+                <img src="schematic3.jpg" width=400 class="rotateimg180"></a>
+                </p>
+            <p>
+            Here is my schematic. I learned the symbol for the photoresistor from electronics-notes.com. <br> <br> <br>
+                <img src="initialCalc.jpg" width=400 class="rotateimg180"></a>
+                </p>
+            Lia Johansen/Prof. Nadya helped with this: <br> <br>
+            To find the resistor value to use with the photoresistor, I had to do some calculations using 
+            the min and max resistance of the photoresistor, depending on the amount of light it is exposed to. 
+            I used the multimeter to get the max and min values, measuring when the lights were on, and when 
+            the room was dark. These are the values I read: <br> <br>
+            Rmin: 185 ohms <br>
+            Rmax: 100k ohms <br> <br>
+            
+            Then, I calculated the Vout values for both the low and high resistance values; then, I subtracted 
+            Vout_low from Vout_high to get the voltage range; I was looking for the resistor that would allow analogRead() 
+            to read the widest range possible. <br>
+            I checked for 220 ohms, and the range was pretty small, so I went up to 100k ohms, and the range was also small. 
+            Then, I went down to 2k ohms and the range was 4.47V. I did the calculation for 10k ohms, and the range was slightly 
+            smaller than the 2k resistor, at 4.45V. <br>
+            Even though the 10k resistor had a range that was a tiny bit smaller, I chose that resistor because I figured 
+            using a higher resitor would be a safer bet, and the tiny difference in voltage range between 10k and 2k would 
+            not make a visible difference.
+            <p>
+                <img src="10kcalc.jpg" width=400 class="rotateimg180"></a>
+                </p>                            
+            <p>
+                There are my calculations for the 2k and 10k ohm resistors. <br> <br>
+                <img src="red_yellow.jpg" width=400 class="rotateimg180"></a>
+                </p>     
+                Here is my calculation for the red and yellow LEDs' resistors.                    
+                    
+            <p>
+            <br> Here is my code for this assignment: <br><br>
+                <pre><code>
                                     // HW 3 - HCDE 439
                 
                                     // I gave the constants in my circuit names, so I could make my code more readable, and know which pin I was assigning something to
@@ -176,12 +175,6 @@
                                       // delays 2 milliseconds before the next loop starts
                                       delay(2);
                                     }</code>
-                            </p>
-                        </div>
-                        
-                    </body>
-                </html>
-                </code>
             </p>
         </div>
         
