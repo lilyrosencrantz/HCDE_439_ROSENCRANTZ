@@ -53,8 +53,8 @@
             
             Then, I looked for the resistor that would allow analogRead() to read the widest range of values possible 
             at the voltage divider. If the photoresistor were capturing the whole range, 
-            the readings would go from 0-1023 (a full 5 volt range); mine only went from about 30 to 900, so I constrained 
-            my range to those values.<br>
+            the readings would go from 0-1023 (a full 5 volt range); mine only went from about 30 to 900, that's why Iconstrained 
+            my range to those values in my void loop.<br>
             Next, I calculated the Vout values for both the low and high resistance values; then, I subtracted 
             Vout_low from Vout_high to get the voltage range; 
             I checked for 220 ohms, and the range was pretty small, so I went up to 100k ohms, and the range was also small. 
