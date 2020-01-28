@@ -33,22 +33,22 @@
             <p>
             This image shows my circuit, which has two LEDs and a photoresistor. The LEDs have to be connected 
             to the pins with tildes (~) because these are the pins that allow for analogWrite()to write the 
-            analog value measured by the photoresistor to the pin. <br>
-                <img src="circuit2.jpg" width=400 class="rotateimg180"></a>
+            analog value measured by the photoresistor to the pin. <br> <br> <br>
+                <img src="circuit2.jpg" width=400></a>
                 </p>
-            This is the side view of my circuit. <br>
+            This is the side view of my circuit. <br> <br> <br>
             <p>
                 <img src="schematic3.jpg" width=400 class="rotateimg180"></a>
                 </p>
             <p>
-            Here is my schematic. I learned the symbol for the photoresistor from electronics-notes.com. <br>
+            Here is my schematic. I learned the symbol for the photoresistor from electronics-notes.com. <br> <br> <br>
                 <img src="initialCalc.jpg" width=400 class="rotateimg180"></a>
                 </p>
-            Lia Johansen/Prof. Nadya helped with this: <br>
+            Lia Johansen/Prof. Nadya helped with this: <br> <br>
             To find the resistor value to use with the photoresistor, I had to do some calculations using 
             the min and max resistance of the photoresistor, depending on the amount of light it is exposed to. 
             I used the multimeter to get the max and min values, measuring when the lights were on, and when 
-            the room was dark. These are the values I read: <br>
+            the room was dark. These are the values I read: <br> <br>
             Rmin: 185 ohms <br>
             Rmax: 100k ohms <br> <br>
             
@@ -72,7 +72,8 @@
                     
             <p>
             <br>Here is my code for this assignment: <br><br>
-                <code>// HW 3 - HCDE 439
+                <code>
+                    // HW 3 - HCDE 439
 
                     // I gave the constants in my circuit names, so I could make my code more readable, and know which pin I was assigning something to
                     const int photoPin = A0; //the photoresistor is attached to pin A0
@@ -174,7 +175,8 @@
                     
                       // delays 2 milliseconds before the next loop starts
                       delay(2);
-                    }</code>
+                    }
+                </code>
             </p>
         </div>
         
