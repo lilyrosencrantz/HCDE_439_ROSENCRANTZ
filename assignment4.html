@@ -31,7 +31,7 @@
             because I needed a pin I could analogWrite() to.  <br> <br> <br>
                 <img src="wide_circuit.jpg" width=400></a>
                 </p>
-            This is the side view of my circuit. <br> <br>
+            This is zoomed-out view of my circuit (not plugged into my computer). The  <br> <br>
             <p>
                 <img src="schematic4.jpg" width=400 class="rotateimg180"></a>
                 </p>
@@ -46,9 +46,30 @@
                 </p>
             These are the calculations I did to figure out whether the current I was putting through the 
             transistor was an amount it could handle. The total current going through the LED 
-            strip is 0.66A, which is far less than the transistor's max current of 32A.
+            strip is 0.66A, which is far less than the transistor's max current of 32A. <br>
+            I also figured I would find the R total for all of the LED segments. I did this by using 
+            the Resistance formula for things in parallel. <br> <br>
+            1/Rtot = (1/181)*100 <br>
+            I know the resistance for each 3-LED segment was 181, and so added 1/R for each of those segments. 
+            From that calculation I got Rtot= 1.81 ohms. <br>
+            From there I could double-check my current calculations by doing <br> <br>
+            Vtot = Itot * Rtot <br>
+            1.2V = Itot * 1.81ohms <br>
+            1.2V/1.81ohms = Itot = .66A <br>
+            Matching my calcution done in the photo above. <br>
+            Kay, Lia, and I worked through these together to make sure we were getting the correct values.
             <br>              
             <p>
+            <h2>The function of my system: </h2><br>
+            I used the remote and sensor to conrtol my LED strip. I coded my remote to match certain functions 
+            with numbers on the remote: <br>
+            0: zero on the remote turned the LED strip on to max brightness (255 in the duty cycle), which is like turning the LED to HIGH using 
+            digitalWrite(). <br>
+            1: turns the LED off by using analogWrite() to write 0 to the transitor pin <br>
+            2: Makes the LED strip incrementally brighter by using a loop <br>
+            3: Makes the LED strip incrementally dimmer by using a loop <br>
+            4: Uses a loop to make a blinking pattern repeat 5 times using the LED strip
+            
             <br> Here is my code for this assignment: <br><br>
                 <pre><code>
                     // include IR remote library so I can use my remote
@@ -92,14 +113,14 @@
                         if (results.value == 0xFF6897) {
                           // prints "0" in the serial monitor
                           Serial.println("0");
-                          // turns LED strip to HIGH
+                          // turns LED strip to HIGH when 0 is pressed
                           analogWrite(transPin, 255);
                         }
                         // checks if the button 1 on the remote was pressed
                         if (results.value == 0xFF30CF) {
                           // prints "1" in the serial monitor
                           Serial.println("1");
-                          // turns off LED strip when 0 is pressed
+                          // turns off LED strip when 1 is pressed
                           analogWrite(transPin, 0);
                           // can't press another button/turn of LED for one second
                           delay(1000);
