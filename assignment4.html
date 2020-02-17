@@ -21,13 +21,14 @@
             I used a remote sensor and a transistor to be able to control an LED strip's state by pressing buttons 
             on a remote.
             This project uses remote sensing and an N-MOSFET transistor. The purpose of this was to 
-            control an LED strip with a higher load than the arduino can support; to use atransistor to control 
+            control an LED strip with a higher load than the arduino can support; to use a transistor to control 
             load power separate from logic power.<br>
             <p>
                 <img src="small_circuit.jpg" width=400></a>
                 </p>
             <p>
-            This image shows my circuit, which has  <br> <br> <br>
+            This image shows a zoomed-in view of my circuit. I connected the transistor to pin ~10 
+            because I needed a pin I could analogWrite() to.  <br> <br> <br>
                 <img src="wide_circuit.jpg" width=400></a>
                 </p>
             This is the side view of my circuit. <br> <br>
@@ -35,9 +36,17 @@
                 <img src="schematic4.jpg" width=400 class="rotateimg180"></a>
                 </p>
             <p>
-            Here is my schematic. Lia helped me figure out how to draw the LED strip in my schematic. <br> <br>
+            Here is my schematic. Lia helped me figure out how to draw the LED strip in my schematic. It shows that 
+            the D pin of the transistor is attached to the LED stip, the S pin is connected to GND, and the G pin is 
+            connected to pin ~10. The infrared sensor, used to pick up signals from the remote 
+            so I can control the LED, gets its volatage from 5V on the arduino (R), not the 12V like the LED strip. 
+            I connected pin 7 to Y on the sensor, which reads input that is received in HEX codes from the remote. 
+            The voltage travels to ground (G). <br> <br> <br>
                 <img src="led_calc4.jpg" width=400 class="rotateimg180"></a>
                 </p>
+            These are the calculations I did to figure out whether the current I was putting through the 
+            transistor was an amount it could handle. The total current going through the LED 
+            strip is 0.66A, which is far less than the transistor's max current of 32A.
             <br>              
             <p>
             <br> Here is my code for this assignment: <br><br>
