@@ -12,17 +12,19 @@
     <body> 
         <div class="header">
             <h1>Lily's Assignment 4!</h1>
-            <br>Here is all the documentation for assignment 4! <br>
+            <br><h2>Here is all the documentation for assignment 4! </h2><br> <br>
             
+            <h2>Operation of Circuit</h2> <br>
             <p>
             <img src="remote.gif" width=400></a>
             </p> 
-            This gif shows the operation of my circuit:<br>
+            This gif shows the operation of my circuit:<br> <br>
             I used a remote sensor and a transistor to be able to control an LED strip's state by pressing buttons 
             on a remote.
             This project uses remote sensing and an N-MOSFET transistor. The purpose of this was to 
             control an LED strip with a higher load than the arduino can support; to use a transistor to control 
-            load power separate from logic power.<br>
+            load power separate from logic power.<br> <br>
+            <h2>Circuit</h2> <br>
             <p>
                 <img src="small_circuit.jpg" width=400></a>
                 </p>
@@ -31,7 +33,10 @@
             because I needed a pin I could analogWrite() to.  <br> <br> <br>
                 <img src="wide_circuit.jpg" width=400></a>
                 </p>
-            This is zoomed-out view of my circuit (not plugged into my computer). The  <br> <br>
+            This is zoomed-out view of my circuit (not plugged into my computer).  <br> 
+            Kathy and Emily helped me figure out all the wiring during class.
+            <br><br>
+            <h2>Schematic</h2> <br> <br>
             <p>
                 <img src="schematic4.jpg" width=400 class="rotateimg180"></a>
                 </p>
@@ -42,6 +47,7 @@
             so I can control the LED, gets its volatage from 5V on the arduino (R), not the 12V like the LED strip. 
             I connected pin 7 to Y on the sensor, which reads input that is received in HEX codes from the remote. 
             The voltage travels to ground (G). <br> <br> <br>
+            <h2>Calculations for Current</h2> <br>
                 <img src="led_calc4.jpg" width=400 class="rotateimg180"></a>
                 </p>
             These are the calculations I did to figure out whether the current I was putting through the 
@@ -62,7 +68,7 @@
             <p>
             <h2>The function of my system: </h2><br>
             I used the remote and sensor to conrtol my LED strip. I coded my remote to match certain functions 
-            with numbers on the remote: <br>
+            with numbers on the remote: <br> <br>
             0: zero on the remote turned the LED strip on to max brightness (255 in the duty cycle), which is like turning the LED to HIGH using 
             digitalWrite(). <br>
             1: turns the LED off by using analogWrite() to write 0 to the transitor pin <br>
