@@ -22,6 +22,10 @@
             <p>
             <img src="remote.gif" width=400></a>
             </p> 
+            My circuit did various things depending on the input. If the button was not pressed, it was a grid of dark and light blue 
+            rectangles. If the button was pressed, the rectangles changed to purple and lime green. For the photoresisotr, when little light 
+            was detected, a white circle would show up on the middle of the screen. When a lot of light was detected, the circle 
+            would disappear.
             This gif shows the operation of my circuit:<br> <br>
             <br> <br>
             <h2>Circuit</h2> <br>
@@ -94,7 +98,8 @@
                         delay(50); // delay of 50 milliseconds
                       }
                 </code> <br> <br>
-            This is the javascript code.
+            This is the javascript code. I used example2 as my basis for this assignment, and altered it as needed. I did not use JSON, and instead 
+            parsed a string read to Serial, where I separated the readings for the photoresistor and the button with a space.
                 <pre><code>
                     var serial; // variable to hold an instance of the serialport library
 var portName = '/dev/tty.usbmodem14101' //rename to the name of your port to the port on my mac
