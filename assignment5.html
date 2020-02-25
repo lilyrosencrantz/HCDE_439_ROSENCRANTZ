@@ -1,0 +1,321 @@
+<!DOCTYPE html> 
+<html> 
+    <head> 
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+        <title>Lily's Assignment 5!</title> 
+
+        <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
+
+    </head> 
+    <body> 
+        <div class="header">
+            <h1>Lily's Assignment 5!</h1>
+            <br>Here is all the documentation for assignment 5! <br> <br>
+            For this assignment, I used two sensors, a photoresistor and a button. When these received input, I was able to use Serial to 
+            write to a webpage. The input data from the button and the photoresistor were printed in Serial, and then P5 Serial Control 
+            was able to read from the serial port. I imported that data to a Javasript file, where I used the various input values to draw 
+            using the draw() function. <br> <br>
+            Kay and Lia helped me with the code for reading and parsing the sensor values in javascript.
+            <h2>Operation of Circuit</h2> <br>
+            <p>
+            <img src="remote.gif" width=400></a>
+            </p> 
+            This gif shows the operation of my circuit:<br> <br>
+            <br> <br>
+            <h2>Circuit</h2> <br>
+            <p>
+                <img src="hw5circuit1.jpg" width=400></a>
+                </p>
+            <p>
+            This image shows my circuit. I used pin A0 with the photoresistor so I could use AnalogRead(). <br> <br> <br>
+                <img src="hw5circuit2.jpg" width=400></a>
+                </p>
+            This is another view of my circuit (not plugged into my computer).  <br> 
+
+            <br><br>
+            <h2>Schematic</h2> <br>
+            <p>
+                <img src="schematic_a5.jpg" width=400 class="rotateimg180"></a>
+                </p>
+            <br>              
+            <p> <br>
+            <h2>The function of my system: </h2><br>
+            I used my calculations from assignment 2 and assignment 3 for the correct resistors to use with the button and photoresistor, respectively. <br>
+            <br><p style="font-size:130%;">To find the right resistor to use with the button, I used the equation: <br></p>
+            5V = 0.035A*R <br>
+            I used 0.035A because the max current for a button is 40mA; I used 35mA to be on the conservative side. The button doesn’t have a voltage drop, so the 5V supplied by the arduino remain constant in the equation. <br>
+            143ohm ~= R <br>
+            So, I used the 220 ohm resistor because that was the closest to 143 ohms <br>
+            
+            To find the resistor value to use with the photoresistor, I had to do some calculations using 
+            the min and max resistance of the photoresistor, depending on the amount of light it is exposed to. 
+            I used the multimeter to get the max and min values, measuring when the lights were on, and when 
+            the room was dark. These are the values I read: <br> <br>
+            Rmin: 185 ohms <br>
+            Rmax: 100k ohms <br> <br>
+            
+            Then, I looked for the resistor that would allow analogRead() to read the widest range of values possible 
+            at the voltage divider. If the photoresistor were capturing the whole range, 
+            the readings would go from 0-1023 (a full 5 volt range); mine only went from about 30 to 900, that's why I constrained 
+            my range to those values in my void loop.<br> <br>
+            Next, I calculated the Vout values for both the low and high resistance values; then, I subtracted 
+            Vout_low from Vout_high to get the voltage range; 
+            I checked for 220 ohms, and the range was pretty small, so I went up to 100k ohms, and the range was also small. 
+            Then, I went down to 2k ohms and the range was 4.47V. I did the calculation for 10k ohms, and the range was slightly 
+            smaller than the 2k resistor, at 4.45V. <br> <br>
+            Even though the 10k resistor had a range that was a tiny bit smaller, I chose that resistor because I figured 
+            using a higher resitor would be a safer bet, and the tiny difference in voltage range between 10k and 2k would 
+            not make a visible difference. <br>
+            <p>
+                <img src="10kcalc.jpg" width=400 class="rotateimg180"></a>
+            </p>                            
+                Above are my calculations for the 2k and 10k ohm resistors. <br> <br> <br>
+            
+            <br> Here is my code for this assignment. <br><br>
+            This is the arduino code. <br>
+            For the input data from the button, I read either 1 (HIGH) or 0 (LOW). For the photoresistor, the values read ranged from 0-1023.
+                <pre><code>
+                    void setup() {
+                        Serial.begin(9600); // so I can see values in serial monitor
+                      }
+                      void loop() {
+                        int button = digitalRead(2); // sets variable button to the pin of the button
+                        int photo = analogRead(A0); // sets variable photo to pin of photoresistor
+                        int constPhoto = constrain(photo, 30, 900); // constrains input value to range most likely to be read
+                        int mapPhoto = map(constPhoto,30, 900, 0, 200); // maps range to smaller range
+
+
+                        Serial.print(button); // prints the button value in the serial monitor
+                        Serial.print(" "); // prints a space between button and photo values
+                        // this is important for reading the data in javascript
+                        Serial.println(mapPhoto); // prints photoresistor value and a newline
+                        delay(50); // delay of 50 milliseconds
+                      }
+                </code> <br> <br>
+            This is the javascript code.
+                <pre><code>
+                    var serial; // variable to hold an instance of the serialport library
+var portName = '/dev/tty.usbmodem14101' //rename to the name of your port to the port on my mac
+//var dataarray = []; //some data coming in over serial!
+// var xPos = 0;
+var button = 0; // makes a variable to store the button read value
+var photo = 0;  // makes a variable to sotre the photoresister read value
+
+function setup() {
+  serial = new p5.SerialPort();       // make a new instance of the serialport library
+  serial.on('list', printList);       // set a callback function for the serialport list event
+  serial.on('connected', serverConnected); // callback for connecting to the server
+  serial.on('open', portOpen);        // callback for the port opening
+  serial.on('data', serialEvent);     // callback for when new data arrives
+  serial.on('error', serialError);    // callback for errors
+  serial.on('close', portClose);      // callback for the port closing
+ 
+  serial.list();                      // list the serial ports
+  serial.open(portName);              // open a serial port
+  createCanvas(1200, 800);            // makes a canvas on the webpage that is 1200 by 800 pixels
+  background(0x08, 0x16, 0x40);       // changes the color of the backgrouns
+}
+ 
+// get the list of ports:
+function printList(portList) {
+ // portList is an array of serial port names
+ for (var i = 0; i < portList.length; i++) {
+ // Display the list the console:
+   print(i + " " + portList[i]);
+ }
+}
+
+function serverConnected() { // Message for debugging
+  print('connected to server.');
+}
+ 
+function portOpen() { // For debugging: when the Serial port has been opened, print the following statement
+  // this helps debug the serial port if anything goes wrong
+  print('the serial port opened.')
+}
+ 
+function serialError(err) { // For debugging: function details what to print when an error occurs in the serial port
+  print('Something went wrong with the serial port. ' + err);
+}
+ 
+function portClose() { // For debugging: when the serial port is closed, this statement will be printed
+  print('The serial port closed.');
+}
+
+// this method reads serial and gets the values read by the button and photoresistor
+// then turns them into variables I can use
+function serialEvent() {
+  if (serial.available()) { // checks if there is serial data to read
+    var datastring = serial.readLine(); // reads data from the serial
+    try { // if no errors
+      button = datastring.substring(0, 1); // saves the first value in the data string as button 
+      // (the button press is the first value written to Serial before a space)
+      photo = datastring.substring(2); // saves the first value in the data string as photo 
+      // (the photoresistor reading is the first value written to Serial before a space)
+      } catch(err) { // checks for errors
+        console.log(err); // prints the error statement in console to make debugging easier
+    }
+  } 
+}
+
+// function loops and makes the designs I made on the webpage 
+function draw() { // function of draws on the webpage
+  if (button == 0) { // checks if the button was pressed
+    // the following variables make it so I can more easily update the colors of the grid on my webpage
+    // these three numbers make dark blue
+    x = 0; // x is R value for every other rectangle
+    y = 0; // y is G value for every other rectangle
+    z = 100; // z is B value for every other rectangle
+
+    // these three numbers make light blue
+    a = 0; // a is R value for every other rectangle
+    b = 100; // b is G value for every other rectangle
+    c = 200; // c is B value for every other rectangle
+
+    // loop that makes first column of rectangles of alternating colors
+    for (var i = 0; i< 5; i++){ 
+      if (i%2 ==0){  // checks if the number is odd or even (so I can make every other rectangle a diffrent color)
+        fill(x, y, z); // fills rectangle
+        rect(0, i*160, 240, 160); // makes rectangle, moving the y-coordinate down 160 pixels each loop
+      } else { // if number is odd
+        fill(a, b, c); // fills rectangle
+        rect(0, i*160, 240, 160); // makes rectangle, moving the y-coordinate down 160 pixels each loop
+      }
+    }
+
+    // loop that makes second column of rectangles of alternating colors 
+    //(same as above but x-value for rectangles is 240)
+    for (var i = 0; i< 5; i++){ 
+      if (i%2 ==0){
+        fill(a, b, c);
+        rect(240, i*160, 240, 160);
+      } else {
+        fill(x, y, z);
+        rect(240, i*160, 240, 160);
+      }
+    }
+
+    // loop that makes third column of rectangles of alternating colors
+    //(same as above but x-value for rectangles is 4800)
+    for (var i = 0; i< 5; i++){
+      if (i%2 ==0){
+        fill(x, y, z);
+        rect(480, i*160, 240, 160);
+      } else {
+        fill(a, b, c);
+        rect(480, i*160, 240, 160);
+      }
+    }
+
+    // loop that makes fourth column of rectangles of alternating colors
+    //(same as above but x-value for rectangles is 720)
+    for (var i = 0; i< 5; i++){
+      if (i%2 ==0){
+        fill(a, b, c);
+        rect(720, i*160, 240, 160);
+      } else {
+        fill(x, y, z);
+        rect(720, i*160, 240, 160);
+      }
+    }
+
+    // loop that makes fifth column of rectangles of alternating colors
+    //(same as above but x-value for rectangles is 960)
+    for (var i = 0; i< 5; i++){
+      if (i%2 ==0){
+        fill(x, y, z);
+        rect(960, i*160, 240, 160);
+      } else {
+        fill(a, b, c);
+        rect(960, i*160, 240, 160);
+      }
+    }
+
+  } else {
+
+    // the following variables make it so I can more easily update the colors of the grid on my webpage
+    // the following numbers make purple
+    x = 100; // x is R value for every other rectangle
+    y = 0; // y is G value for every other rectangle
+    z = 100; // z is B value for every other rectangle
+
+    // the following numbers make lime green
+    a = 200; // a is R value for every other rectangle
+    b = 250; // b is G value for every other rectangle
+    c = 5; // c is B value for every other rectangle
+
+    // loop that makes first column of rectangles of alternating colors
+    for (var i = 0; i< 5; i++){ 
+      if (i%2 ==0){  // checks if the number is odd or even (so I can make every other rectangle a diffrent color)
+        fill(x, y, z); // fills rectangle
+        rect(0, i*160, 240, 160); // makes rectangle, moving the y-coordinate down 160 pixels each loop
+      } else { // if number is odd
+        fill(a, b, c); // fills rectangle
+        rect(0, i*160, 240, 160); // makes rectangle, moving the y-coordinate down 160 pixels each loop
+      }
+    }
+
+    // loop that makes second column of rectangles of alternating colors 
+    //(same as above but x-value for rectangles is 240)
+    for (var i = 0; i< 5; i++){ 
+      if (i%2 ==0){
+        fill(a, b, c);
+        rect(240, i*160, 240, 160);
+      } else {
+        fill(x, y, z);
+        rect(240, i*160, 240, 160);
+      }
+    }
+
+    // loop that makes third column of rectangles of alternating colors
+    //(same as above but x-value for rectangles is 4800)
+    for (var i = 0; i< 5; i++){
+      if (i%2 ==0){
+        fill(x, y, z);
+        rect(480, i*160, 240, 160);
+      } else {
+        fill(a, b, c);
+        rect(480, i*160, 240, 160);
+      }
+    }
+
+    // loop that makes fourth column of rectangles of alternating colors
+    //(same as above but x-value for rectangles is 720)
+    for (var i = 0; i< 5; i++){
+      if (i%2 ==0){
+        fill(a, b, c);
+        rect(720, i*160, 240, 160);
+      } else {
+        fill(x, y, z);
+        rect(720, i*160, 240, 160);
+      }
+    }
+
+    // loop that makes fifth column of rectangles of alternating colors
+    //(same as above but x-value for rectangles is 960)
+    for (var i = 0; i< 5; i++){
+      if (i%2 ==0){
+        fill(x, y, z);
+        rect(960, i*160, 240, 160);
+      } else {
+        fill(a, b, c);
+        rect(960, i*160, 240, 160);
+      }
+    }
+  }
+
+  if (photo < 50) { // checks if the reading from the photoresistor is less than 50
+  fill(250, 250, 250); // pure white is the fill
+  ellipse(500, 400, 300, 300); // of this 300 x 300 pixel circle
+  }
+  
+}
+
+                </code>
+            </p>
+        </div>
+        
+    </body>
+</html>
