@@ -102,221 +102,221 @@
             parsed a string read to Serial, where I separated the readings for the photoresistor and the button with a space.
                 <pre><code>
                     var serial; // variable to hold an instance of the serialport library
-var portName = '/dev/tty.usbmodem14101' //rename to the name of your port to the port on my mac
-//var dataarray = []; //some data coming in over serial!
-// var xPos = 0;
-var button = 0; // makes a variable to store the button read value
-var photo = 0;  // makes a variable to sotre the photoresister read value
+                    var portName = '/dev/tty.usbmodem14101' //rename to the name of your port to the port on my mac
+                    //var dataarray = []; //some data coming in over serial!
+                    // var xPos = 0;
+                    var button = 0; // makes a variable to store the button read value
+                    var photo = 0;  // makes a variable to sotre the photoresister read value
 
-function setup() {
-  serial = new p5.SerialPort();       // make a new instance of the serialport library
-  serial.on('list', printList);       // set a callback function for the serialport list event
-  serial.on('connected', serverConnected); // callback for connecting to the server
-  serial.on('open', portOpen);        // callback for the port opening
-  serial.on('data', serialEvent);     // callback for when new data arrives
-  serial.on('error', serialError);    // callback for errors
-  serial.on('close', portClose);      // callback for the port closing
- 
-  serial.list();                      // list the serial ports
-  serial.open(portName);              // open a serial port
-  createCanvas(1200, 800);            // makes a canvas on the webpage that is 1200 by 800 pixels
-  background(0x08, 0x16, 0x40);       // changes the color of the backgrouns
-}
- 
-// get the list of ports:
-function printList(portList) {
- // portList is an array of serial port names
- for (var i = 0; i < portList.length; i++) {
- // Display the list the console:
-   print(i + " " + portList[i]);
- }
-}
+                    function setup() {
+                      serial = new p5.SerialPort();       // make a new instance of the serialport library
+                      serial.on('list', printList);       // set a callback function for the serialport list event
+                      serial.on('connected', serverConnected); // callback for connecting to the server
+                      serial.on('open', portOpen);        // callback for the port opening
+                      serial.on('data', serialEvent);     // callback for when new data arrives
+                      serial.on('error', serialError);    // callback for errors
+                      serial.on('close', portClose);      // callback for the port closing
 
-function serverConnected() { // Message for debugging
-  print('connected to server.');
-}
- 
-function portOpen() { // For debugging: when the Serial port has been opened, print the following statement
-  // this helps debug the serial port if anything goes wrong
-  print('the serial port opened.')
-}
- 
-function serialError(err) { // For debugging: function details what to print when an error occurs in the serial port
-  print('Something went wrong with the serial port. ' + err);
-}
- 
-function portClose() { // For debugging: when the serial port is closed, this statement will be printed
-  print('The serial port closed.');
-}
+                      serial.list();                      // list the serial ports
+                      serial.open(portName);              // open a serial port
+                      createCanvas(1200, 800);            // makes a canvas on the webpage that is 1200 by 800 pixels
+                      background(0x08, 0x16, 0x40);       // changes the color of the backgrouns
+                    }
 
-// this method reads serial and gets the values read by the button and photoresistor
-// then turns them into variables I can use
-function serialEvent() {
-  if (serial.available()) { // checks if there is serial data to read
-    var datastring = serial.readLine(); // reads data from the serial
-    try { // if no errors
-      button = datastring.substring(0, 1); // saves the first value in the data string as button 
-      // (the button press is the first value written to Serial before a space)
-      photo = datastring.substring(2); // saves the first value in the data string as photo 
-      // (the photoresistor reading is the first value written to Serial before a space)
-      } catch(err) { // checks for errors
-        console.log(err); // prints the error statement in console to make debugging easier
-    }
-  } 
-}
+                    // get the list of ports:
+                    function printList(portList) {
+                     // portList is an array of serial port names
+                     for (var i = 0; i < portList.length; i++) {
+                     // Display the list the console:
+                       print(i + " " + portList[i]);
+                     }
+                    }
 
-// function loops and makes the designs I made on the webpage 
-function draw() { // function of draws on the webpage
-  if (button == 0) { // checks if the button was pressed
-    // the following variables make it so I can more easily update the colors of the grid on my webpage
-    // these three numbers make dark blue
-    x = 0; // x is R value for every other rectangle
-    y = 0; // y is G value for every other rectangle
-    z = 100; // z is B value for every other rectangle
+                    function serverConnected() { // Message for debugging
+                      print('connected to server.');
+                    }
 
-    // these three numbers make light blue
-    a = 0; // a is R value for every other rectangle
-    b = 100; // b is G value for every other rectangle
-    c = 200; // c is B value for every other rectangle
+                    function portOpen() { // For debugging: when the Serial port has been opened, print the following statement
+                      // this helps debug the serial port if anything goes wrong
+                      print('the serial port opened.')
+                    }
 
-    // loop that makes first column of rectangles of alternating colors
-    for (var i = 0; i< 5; i++){ 
-      if (i%2 ==0){  // checks if the number is odd or even (so I can make every other rectangle a diffrent color)
-        fill(x, y, z); // fills rectangle
-        rect(0, i*160, 240, 160); // makes rectangle, moving the y-coordinate down 160 pixels each loop
-      } else { // if number is odd
-        fill(a, b, c); // fills rectangle
-        rect(0, i*160, 240, 160); // makes rectangle, moving the y-coordinate down 160 pixels each loop
-      }
-    }
+                    function serialError(err) { // For debugging: function details what to print when an error occurs in the serial port
+                      print('Something went wrong with the serial port. ' + err);
+                    }
 
-    // loop that makes second column of rectangles of alternating colors 
-    //(same as above but x-value for rectangles is 240)
-    for (var i = 0; i< 5; i++){ 
-      if (i%2 ==0){
-        fill(a, b, c);
-        rect(240, i*160, 240, 160);
-      } else {
-        fill(x, y, z);
-        rect(240, i*160, 240, 160);
-      }
-    }
+                    function portClose() { // For debugging: when the serial port is closed, this statement will be printed
+                      print('The serial port closed.');
+                    }
 
-    // loop that makes third column of rectangles of alternating colors
-    //(same as above but x-value for rectangles is 4800)
-    for (var i = 0; i< 5; i++){
-      if (i%2 ==0){
-        fill(x, y, z);
-        rect(480, i*160, 240, 160);
-      } else {
-        fill(a, b, c);
-        rect(480, i*160, 240, 160);
-      }
-    }
+                    // this method reads serial and gets the values read by the button and photoresistor
+                    // then turns them into variables I can use
+                    function serialEvent() {
+                      if (serial.available()) { // checks if there is serial data to read
+                        var datastring = serial.readLine(); // reads data from the serial
+                        try { // if no errors
+                          button = datastring.substring(0, 1); // saves the first value in the data string as button 
+                          // (the button press is the first value written to Serial before a space)
+                          photo = datastring.substring(2); // saves the first value in the data string as photo 
+                          // (the photoresistor reading is the first value written to Serial before a space)
+                          } catch(err) { // checks for errors
+                            console.log(err); // prints the error statement in console to make debugging easier
+                        }
+                      } 
+                    }
 
-    // loop that makes fourth column of rectangles of alternating colors
-    //(same as above but x-value for rectangles is 720)
-    for (var i = 0; i< 5; i++){
-      if (i%2 ==0){
-        fill(a, b, c);
-        rect(720, i*160, 240, 160);
-      } else {
-        fill(x, y, z);
-        rect(720, i*160, 240, 160);
-      }
-    }
+                    // function loops and makes the designs I made on the webpage 
+                    function draw() { // function of draws on the webpage
+                      if (button == 0) { // checks if the button was pressed
+                        // the following variables make it so I can more easily update the colors of the grid on my webpage
+                        // these three numbers make dark blue
+                        x = 0; // x is R value for every other rectangle
+                        y = 0; // y is G value for every other rectangle
+                        z = 100; // z is B value for every other rectangle
 
-    // loop that makes fifth column of rectangles of alternating colors
-    //(same as above but x-value for rectangles is 960)
-    for (var i = 0; i< 5; i++){
-      if (i%2 ==0){
-        fill(x, y, z);
-        rect(960, i*160, 240, 160);
-      } else {
-        fill(a, b, c);
-        rect(960, i*160, 240, 160);
-      }
-    }
+                        // these three numbers make light blue
+                        a = 0; // a is R value for every other rectangle
+                        b = 100; // b is G value for every other rectangle
+                        c = 200; // c is B value for every other rectangle
 
-  } else {
+                        // loop that makes first column of rectangles of alternating colors
+                        for (var i = 0; i< 5; i++){ 
+                          if (i%2 ==0){  // checks if the number is odd or even (so I can make every other rectangle a diffrent color)
+                            fill(x, y, z); // fills rectangle
+                            rect(0, i*160, 240, 160); // makes rectangle, moving the y-coordinate down 160 pixels each loop
+                          } else { // if number is odd
+                            fill(a, b, c); // fills rectangle
+                            rect(0, i*160, 240, 160); // makes rectangle, moving the y-coordinate down 160 pixels each loop
+                          }
+                        }
 
-    // the following variables make it so I can more easily update the colors of the grid on my webpage
-    // the following numbers make purple
-    x = 100; // x is R value for every other rectangle
-    y = 0; // y is G value for every other rectangle
-    z = 100; // z is B value for every other rectangle
+                        // loop that makes second column of rectangles of alternating colors 
+                        //(same as above but x-value for rectangles is 240)
+                        for (var i = 0; i< 5; i++){ 
+                          if (i%2 ==0){
+                            fill(a, b, c);
+                            rect(240, i*160, 240, 160);
+                          } else {
+                            fill(x, y, z);
+                            rect(240, i*160, 240, 160);
+                          }
+                        }
 
-    // the following numbers make lime green
-    a = 200; // a is R value for every other rectangle
-    b = 250; // b is G value for every other rectangle
-    c = 5; // c is B value for every other rectangle
+                        // loop that makes third column of rectangles of alternating colors
+                        //(same as above but x-value for rectangles is 4800)
+                        for (var i = 0; i< 5; i++){
+                          if (i%2 ==0){
+                            fill(x, y, z);
+                            rect(480, i*160, 240, 160);
+                          } else {
+                            fill(a, b, c);
+                            rect(480, i*160, 240, 160);
+                          }
+                        }
 
-    // loop that makes first column of rectangles of alternating colors
-    for (var i = 0; i< 5; i++){ 
-      if (i%2 ==0){  // checks if the number is odd or even (so I can make every other rectangle a diffrent color)
-        fill(x, y, z); // fills rectangle
-        rect(0, i*160, 240, 160); // makes rectangle, moving the y-coordinate down 160 pixels each loop
-      } else { // if number is odd
-        fill(a, b, c); // fills rectangle
-        rect(0, i*160, 240, 160); // makes rectangle, moving the y-coordinate down 160 pixels each loop
-      }
-    }
+                        // loop that makes fourth column of rectangles of alternating colors
+                        //(same as above but x-value for rectangles is 720)
+                        for (var i = 0; i< 5; i++){
+                          if (i%2 ==0){
+                            fill(a, b, c);
+                            rect(720, i*160, 240, 160);
+                          } else {
+                            fill(x, y, z);
+                            rect(720, i*160, 240, 160);
+                          }
+                        }
 
-    // loop that makes second column of rectangles of alternating colors 
-    //(same as above but x-value for rectangles is 240)
-    for (var i = 0; i< 5; i++){ 
-      if (i%2 ==0){
-        fill(a, b, c);
-        rect(240, i*160, 240, 160);
-      } else {
-        fill(x, y, z);
-        rect(240, i*160, 240, 160);
-      }
-    }
+                        // loop that makes fifth column of rectangles of alternating colors
+                        //(same as above but x-value for rectangles is 960)
+                        for (var i = 0; i< 5; i++){
+                          if (i%2 ==0){
+                            fill(x, y, z);
+                            rect(960, i*160, 240, 160);
+                          } else {
+                            fill(a, b, c);
+                            rect(960, i*160, 240, 160);
+                          }
+                        }
 
-    // loop that makes third column of rectangles of alternating colors
-    //(same as above but x-value for rectangles is 4800)
-    for (var i = 0; i< 5; i++){
-      if (i%2 ==0){
-        fill(x, y, z);
-        rect(480, i*160, 240, 160);
-      } else {
-        fill(a, b, c);
-        rect(480, i*160, 240, 160);
-      }
-    }
+                      } else {
 
-    // loop that makes fourth column of rectangles of alternating colors
-    //(same as above but x-value for rectangles is 720)
-    for (var i = 0; i< 5; i++){
-      if (i%2 ==0){
-        fill(a, b, c);
-        rect(720, i*160, 240, 160);
-      } else {
-        fill(x, y, z);
-        rect(720, i*160, 240, 160);
-      }
-    }
+                        // the following variables make it so I can more easily update the colors of the grid on my webpage
+                        // the following numbers make purple
+                        x = 100; // x is R value for every other rectangle
+                        y = 0; // y is G value for every other rectangle
+                        z = 100; // z is B value for every other rectangle
 
-    // loop that makes fifth column of rectangles of alternating colors
-    //(same as above but x-value for rectangles is 960)
-    for (var i = 0; i< 5; i++){
-      if (i%2 ==0){
-        fill(x, y, z);
-        rect(960, i*160, 240, 160);
-      } else {
-        fill(a, b, c);
-        rect(960, i*160, 240, 160);
-      }
-    }
-  }
+                        // the following numbers make lime green
+                        a = 200; // a is R value for every other rectangle
+                        b = 250; // b is G value for every other rectangle
+                        c = 5; // c is B value for every other rectangle
 
-  if (photo < 50) { // checks if the reading from the photoresistor is less than 50
-  fill(250, 250, 250); // pure white is the fill
-  ellipse(500, 400, 300, 300); // of this 300 x 300 pixel circle
-  }
-  
-}
+                        // loop that makes first column of rectangles of alternating colors
+                        for (var i = 0; i< 5; i++){ 
+                          if (i%2 ==0){  // checks if the number is odd or even (so I can make every other rectangle a diffrent color)
+                            fill(x, y, z); // fills rectangle
+                            rect(0, i*160, 240, 160); // makes rectangle, moving the y-coordinate down 160 pixels each loop
+                          } else { // if number is odd
+                            fill(a, b, c); // fills rectangle
+                            rect(0, i*160, 240, 160); // makes rectangle, moving the y-coordinate down 160 pixels each loop
+                          }
+                        }
+
+                        // loop that makes second column of rectangles of alternating colors 
+                        //(same as above but x-value for rectangles is 240)
+                        for (var i = 0; i< 5; i++){ 
+                          if (i%2 ==0){
+                            fill(a, b, c);
+                            rect(240, i*160, 240, 160);
+                          } else {
+                            fill(x, y, z);
+                            rect(240, i*160, 240, 160);
+                          }
+                        }
+
+                        // loop that makes third column of rectangles of alternating colors
+                        //(same as above but x-value for rectangles is 4800)
+                        for (var i = 0; i< 5; i++){
+                          if (i%2 ==0){
+                            fill(x, y, z);
+                            rect(480, i*160, 240, 160);
+                          } else {
+                            fill(a, b, c);
+                            rect(480, i*160, 240, 160);
+                          }
+                        }
+
+                        // loop that makes fourth column of rectangles of alternating colors
+                        //(same as above but x-value for rectangles is 720)
+                        for (var i = 0; i< 5; i++){
+                          if (i%2 ==0){
+                            fill(a, b, c);
+                            rect(720, i*160, 240, 160);
+                          } else {
+                            fill(x, y, z);
+                            rect(720, i*160, 240, 160);
+                          }
+                        }
+
+                        // loop that makes fifth column of rectangles of alternating colors
+                        //(same as above but x-value for rectangles is 960)
+                        for (var i = 0; i< 5; i++){
+                          if (i%2 ==0){
+                            fill(x, y, z);
+                            rect(960, i*160, 240, 160);
+                          } else {
+                            fill(a, b, c);
+                            rect(960, i*160, 240, 160);
+                          }
+                        }
+                      }
+
+                      if (photo < 50) { // checks if the reading from the photoresistor is less than 50
+                      fill(250, 250, 250); // pure white is the fill
+                      ellipse(500, 400, 300, 300); // of this 300 x 300 pixel circle
+                      }
+
+                    }
 
                 </code>
             </p>
