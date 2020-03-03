@@ -13,10 +13,11 @@
         <div class="header">
             <h1>Lily's Assignment 6!</h1>
             <br>Here is all the documentation for assignment 6! (It is mostly copied from Assignment 5) <br> <br>
-            For this assignment, I used two sensors, a photoresistor and a button. When these received input, I was able to use Serial to 
+            For this assignment, I used two sensors, a photoresistor, a button, and a blue LED. When these received input, I was able to use Serial to 
             write to a webpage. The input data from the button and the photoresistor were printed in Serial, and then P5 Serial Control 
             was able to read from the serial port. I imported that data to a Javasript file, where I used the various input values to draw 
-            using the draw() function. <br> <br>
+            using the draw() function. <br> 
+            I was able to write from the website to serial, and then this data was read to the arduino and used to determine whether the LED was on or off.<br>
             I also used a button on my webpage, which was able to tell when someone had clicked it, and then send information to Serial. The input I sent to Serial was either a 1 or 
             Kay and Lia helped me with the code for reading and parsing the sensor values in javascript.
             <h2>Operation of Circuit</h2> <br>
@@ -28,8 +29,9 @@
             rectangles. If the button was pressed, the rectangles changed to purple and lime green. For the photoresisotr, when little light 
             was detected, a white circle would show up on the middle of the screen. When a lot of light was detected, the circle 
             would disappear. <br>
-            You can see that when I had the photoresistor covered with a pillow, the while circle stayed on the screen constantly. 
+            You can see that when I had the photoresistor covered with a towel, the while circle stayed on the screen constantly. 
             Then, when I shined a light on it the white circle went away. <br> 
+            Then, if I clicked the button on the screen, it turned the blue LED on on the breadboard.
           
             <br> <br>
             <h2>Circuit</h2> <br>
@@ -44,7 +46,7 @@
             <br><br>
             <h2>Schematic</h2> <br>
             <p>
-                <img src="schematic_a5.jpg" width=400 class="rotateimg180"></a>
+                <img src="a6schematic.jpg" width=400 class="rotateimg180"></a>
                 </p>
             <br>              
             <p> <br>
@@ -90,93 +92,167 @@
             This is the arduino code. <br>
             For the input data from the button, I read either 1 (HIGH) or 0 (LOW). For the photoresistor, the values read ranged from 0-1023.
                 <pre><code>
+                    // makes a constant for the number of my pin connected to the button
+                    const int buttonPin = 2;
+                    // makes a constant for the number of my pin connected to the photoresistor
+                    const int photoPin = A0;
+                    // makes a constant for the number of my pin connected to the blue LED
+                    const int ledPin = 10;
+
+                    // initializes a value for the button reading
+                    int button = 0;
+                    // initializes a value for the photoresistor reading
+                    int photo = 0;
+
                     void setup() {
                         Serial.begin(9600); // so I can see values in serial monitor
-                      }
-                      void loop() {
-                        int button = digitalRead(2); // sets variable button to the pin of the button
-                        int photo = analogRead(A0); // sets variable photo to pin of photoresistor
+                        Serial.setTimeout(10); // set the timeout for parseInt
+                        pinMode(ledPin, OUTPUT); // configures the pin connected to the LED as output
+                        pinMode(buttonPin, INPUT); // configures pin connected to the button as input
+                        pinMode(photoPin, INPUT); // configures pin connected to the photoresistor as input
+                    }
+
+                    void loop() {
+                        button = digitalRead(buttonPin); // sets variable button to the pin of the button
+                        photo = analogRead(photoPin); // sets variable photo to pin of photoresistor
                         int constPhoto = constrain(photo, 30, 900); // constrains input value to range most likely to be read
                         int mapPhoto = map(constPhoto,30, 900, 0, 200); // maps range to smaller range
 
-
-                        Serial.print(button); // prints the button value in the serial monitor
-                        Serial.print(" "); // prints a space between button and photo values
+                        Serial.print("["); // print [ in serial monitor
+                        Serial.print(button); // prints the button reading value in the serial monitor
+                        Serial.print(","); // prints a comma between button and photo values
                         // this is important for reading the data in javascript
-                        Serial.println(mapPhoto); // prints photoresistor value and a newline
+                        Serial.print(mapPhoto); // prints photoresistor value and a newline
+                        Serial.println("]"); // print ] in serial monitor
                         delay(50); // delay of 50 milliseconds
-                      }
+
+                        if (Serial.available() > 0) {   // if there's serial data and it is value greater than 0
+                            int inByte = Serial.read(); // read it
+                            Serial.write(inByte);   // send it back out as raw binary data
+                            analogWrite(10, 255); // turn on the LED at max brightness
+                        } else { // if the is not serial data greater than 0
+                            analogWrite(10, 0); // do not turn on the LED
+                        }
+
+                    }
                 </code> <br> <br>
-            This is the javascript code. I used example2 as my basis for this assignment, and altered it as needed. I did not use JSON, and instead 
-            parsed a string read to Serial, where I separated the readings for the photoresistor and the button with a space.
+            This is the javascript code. I used example2 as my basis for this assignment, and altered it as needed. Kay helped me make the button function and html visual element.
                 <pre><code>
                     var serial; // variable to hold an instance of the serialport library
-                    var portName = '/dev/tty.usbmodem14101' //rename to the name of your port to the port on my mac
-                    //var dataarray = []; //some data coming in over serial!
-                    // var xPos = 0;
-                    var button = 0; // makes a variable to store the button read value
-                    var photo = 0;  // makes a variable to sotre the photoresister read value
+                    var portName = '/dev/tty.usbmodem14101' // name of my port
+                    var dataarray = []; // some data coming in over serial!
+                    var button; // variable to hold the state of the button
+                    var photo; // variable to hold the thermistor sensor value
+                    let position = 100; // initializes the starting position of the line to be at 100
+                    var newarray; // container for the JSON parsed serial
+                    var buttonState = 0; // variabble for the state of the button on the website
+
+
+                    // var serial; // variable to hold an instance of the serialport library
+                    // var portName = '/dev/tty.usbmodem14101' //rename to the name of your port to the port on my mac
+                    // //var dataarray = []; //some data coming in over serial!
+                    // // var xPos = 0;
+                    // var button = 0; // makes a variable to store the button read value
+                    // var photo = 0;  // makes a variable to sotre the photoresister read value
+
 
                     function setup() {
-                      serial = new p5.SerialPort();       // make a new instance of the serialport library
-                      serial.on('list', printList);       // set a callback function for the serialport list event
-                      serial.on('connected', serverConnected); // callback for connecting to the server
-                      serial.on('open', portOpen);        // callback for the port opening
-                      serial.on('data', serialEvent);     // callback for when new data arrives
-                      serial.on('error', serialError);    // callback for errors
-                      serial.on('close', portClose);      // callback for the port closing
+                        serial = new p5.SerialPort();       // make a new instance of the serialport library
+                        serial.on('list', printList);       // set a callback function for the serialport list event
+                        serial.on('connected', serverConnected); // callback for connecting to the server
+                        serial.on('open', portOpen);        // callback for the port opening
+                        serial.on('data', serialEvent);     // callback for when new data arrives
+                        serial.on('error', serialError);    // callback for errors
+                        serial.on('close', portClose);      // callback for the port closing
+                    
+                        serial.list();                      // list the serial ports
+                        serial.open(portName);              // open a serial port
+                        createCanvas(1200, 800);            // makes a canvas on the webpage that is 1200 by 800 pixels
+                        background(0x08, 0x16, 0x40);       // changes the color of the backgrouns
 
-                      serial.list();                      // list the serial ports
-                      serial.open(portName);              // open a serial port
-                      createCanvas(1200, 800);            // makes a canvas on the webpage that is 1200 by 800 pixels
-                      background(0x08, 0x16, 0x40);       // changes the color of the backgrouns
+                        // adds an event listener to the button displayed on the webpage
+                        document.getElementById("led").addEventListener("click", led);
                     }
+
 
                     // get the list of ports:
                     function printList(portList) {
-                     // portList is an array of serial port names
-                     for (var i = 0; i < portList.length; i++) {
-                     // Display the list the console:
-                       print(i + " " + portList[i]);
-                     }
+                    // portList is an array of serial port names
+                    for (var i = 0; i < portList.length; i++) {
+                    // Display the list the console:
+                    print(i + " " + portList[i]);
+                    }
                     }
 
-                    function serverConnected() { // Message for debugging
-                      print('connected to server.');
+                    // method used for debugging purposes
+                    function serverConnected() {
+                    // prints out success message
+                    print('connected to server.');
                     }
 
-                    function portOpen() { // For debugging: when the Serial port has been opened, print the following statement
-                      // this helps debug the serial port if anything goes wrong
-                      print('the serial port opened.')
+                    // method used for debugging purposes
+                    function portOpen() {
+                    // prints out success message
+                    print('the serial port opened.')
                     }
 
-                    function serialError(err) { // For debugging: function details what to print when an error occurs in the serial port
-                      print('Something went wrong with the serial port. ' + err);
+                    // method used for debugging purposes
+                    function serialError(err) {
+                    // prints out error message and the code
+                    print('Something went wrong with the serial port. ' + err);
                     }
 
-                    function portClose() { // For debugging: when the serial port is closed, this statement will be printed
-                      print('The serial port closed.');
+                    // method used for debugging purposes
+                    function portClose() {
+                    // prints out exiting message
+                    print('The serial port closed.');
                     }
 
                     // this method reads serial and gets the values read by the button and photoresistor
                     // then turns them into variables I can use
                     function serialEvent() {
-                      if (serial.available()) { // checks if there is serial data to read
-                        var datastring = serial.readLine(); // reads data from the serial
-                        try { // if no errors
-                          button = datastring.substring(0, 1); // saves the first value in the data string as button 
-                          // (the button press is the first value written to Serial before a space)
-                          photo = datastring.substring(2); // saves the first value in the data string as photo 
-                          // (the photoresistor reading is the first value written to Serial before a space)
-                          } catch(err) { // checks for errors
+                        if (serial.available()) { // checks if there is serial data to read
+                            var datastring = serial.readLine(); // reads data from the serial
+                            var newarray;
+                            try { // if no errors
+                                newarray = JSON.parse(datastring);
+                                // (the button press is the first value written to Serial before a space)
+                            // saves the first value in the data string as photo 
+                            // (the photoresistor reading is the first value written to Serial before a space)
+                            } catch(err) { // checks for errors
                             console.log(err); // prints the error statement in console to make debugging easier
-                        }
-                      } 
+                            }
+                            if (typeof(newarray) == 'object') { // if the json data exists
+                                dataarray = newarray; // assign the array to the new array because the data is valid
+                                button = dataarray[0]; // save first value in the arra (whether button was pressed) as variable 'button'
+                                photo = dataarray[1]; // save second value in the array (photoresistor reading) as variable 'photo'
+                            }
+                        } 
+                    }
+
+                    // function for sending data about whether the digital button has been pressed to serial
+                    function led() {
+                    // if the buttonState variable is outside the normal range
+                    if (buttonState > 1) {
+                        // set it to 0
+                        buttonState = 0
+                    }
+                    // if the buttonState is 1
+                    if (buttonState == 1) {
+                        // write 1 to serial so it can be read by the arduino
+                        serial.write("1");
+                    // if the buttonState is 0
+                    } else if (buttonState == 0) {
+                        // write 0 to serial so it can be read by arduino
+                        serial.write("0");
+                    }
+                    // increments buttonSTate so it will toggle appearance, and LED turns off/on
+                    buttonState++;
                     }
 
                     // function loops and makes the designs I made on the webpage 
                     function draw() { // function of draws on the webpage
-                      if (button == 0) { // checks if the button was pressed
+                    if (button == 0) { // checks if the button was pressed
                         // the following variables make it so I can more easily update the colors of the grid on my webpage
                         // these three numbers make dark blue
                         x = 0; // x is R value for every other rectangle
@@ -190,64 +266,64 @@
 
                         // loop that makes first column of rectangles of alternating colors
                         for (var i = 0; i< 5; i++){ 
-                          if (i%2 ==0){  // checks if the number is odd or even (so I can make every other rectangle a diffrent color)
+                        if (i%2 ==0){  // checks if the number is odd or even (so I can make every other rectangle a diffrent color)
                             fill(x, y, z); // fills rectangle
                             rect(0, i*160, 240, 160); // makes rectangle, moving the y-coordinate down 160 pixels each loop
-                          } else { // if number is odd
+                        } else { // if number is odd
                             fill(a, b, c); // fills rectangle
                             rect(0, i*160, 240, 160); // makes rectangle, moving the y-coordinate down 160 pixels each loop
-                          }
+                        }
                         }
 
                         // loop that makes second column of rectangles of alternating colors 
                         //(same as above but x-value for rectangles is 240)
                         for (var i = 0; i< 5; i++){ 
-                          if (i%2 ==0){
+                        if (i%2 ==0){
                             fill(a, b, c);
                             rect(240, i*160, 240, 160);
-                          } else {
+                        } else {
                             fill(x, y, z);
                             rect(240, i*160, 240, 160);
-                          }
+                        }
                         }
 
                         // loop that makes third column of rectangles of alternating colors
                         //(same as above but x-value for rectangles is 4800)
                         for (var i = 0; i< 5; i++){
-                          if (i%2 ==0){
+                        if (i%2 ==0){
                             fill(x, y, z);
                             rect(480, i*160, 240, 160);
-                          } else {
+                        } else {
                             fill(a, b, c);
                             rect(480, i*160, 240, 160);
-                          }
+                        }
                         }
 
                         // loop that makes fourth column of rectangles of alternating colors
                         //(same as above but x-value for rectangles is 720)
                         for (var i = 0; i< 5; i++){
-                          if (i%2 ==0){
+                        if (i%2 ==0){
                             fill(a, b, c);
                             rect(720, i*160, 240, 160);
-                          } else {
+                        } else {
                             fill(x, y, z);
                             rect(720, i*160, 240, 160);
-                          }
+                        }
                         }
 
                         // loop that makes fifth column of rectangles of alternating colors
                         //(same as above but x-value for rectangles is 960)
                         for (var i = 0; i< 5; i++){
-                          if (i%2 ==0){
+                        if (i%2 ==0){
                             fill(x, y, z);
                             rect(960, i*160, 240, 160);
-                          } else {
+                        } else {
                             fill(a, b, c);
                             rect(960, i*160, 240, 160);
-                          }
+                        }
                         }
 
-                      } else {
+                    } else {
 
                         // the following variables make it so I can more easily update the colors of the grid on my webpage
                         // the following numbers make purple
@@ -262,72 +338,74 @@
 
                         // loop that makes first column of rectangles of alternating colors
                         for (var i = 0; i< 5; i++){ 
-                          if (i%2 ==0){  // checks if the number is odd or even (so I can make every other rectangle a diffrent color)
+                        if (i%2 ==0){  // checks if the number is odd or even (so I can make every other rectangle a diffrent color)
                             fill(x, y, z); // fills rectangle
                             rect(0, i*160, 240, 160); // makes rectangle, moving the y-coordinate down 160 pixels each loop
-                          } else { // if number is odd
+                        } else { // if number is odd
                             fill(a, b, c); // fills rectangle
                             rect(0, i*160, 240, 160); // makes rectangle, moving the y-coordinate down 160 pixels each loop
-                          }
+                        }
                         }
 
                         // loop that makes second column of rectangles of alternating colors 
                         //(same as above but x-value for rectangles is 240)
                         for (var i = 0; i< 5; i++){ 
-                          if (i%2 ==0){
+                        if (i%2 ==0){
                             fill(a, b, c);
                             rect(240, i*160, 240, 160);
-                          } else {
+                        } else {
                             fill(x, y, z);
                             rect(240, i*160, 240, 160);
-                          }
+                        }
                         }
 
                         // loop that makes third column of rectangles of alternating colors
                         //(same as above but x-value for rectangles is 4800)
                         for (var i = 0; i< 5; i++){
-                          if (i%2 ==0){
+                        if (i%2 ==0){
                             fill(x, y, z);
                             rect(480, i*160, 240, 160);
-                          } else {
+                        } else {
                             fill(a, b, c);
                             rect(480, i*160, 240, 160);
-                          }
+                        }
                         }
 
                         // loop that makes fourth column of rectangles of alternating colors
                         //(same as above but x-value for rectangles is 720)
                         for (var i = 0; i< 5; i++){
-                          if (i%2 ==0){
+                        if (i%2 ==0){
                             fill(a, b, c);
                             rect(720, i*160, 240, 160);
-                          } else {
+                        } else {
                             fill(x, y, z);
                             rect(720, i*160, 240, 160);
-                          }
+                        }
                         }
 
                         // loop that makes fifth column of rectangles of alternating colors
                         //(same as above but x-value for rectangles is 960)
                         for (var i = 0; i< 5; i++){
-                          if (i%2 ==0){
+                        if (i%2 ==0){
                             fill(x, y, z);
                             rect(960, i*160, 240, 160);
-                          } else {
+                        } else {
                             fill(a, b, c);
                             rect(960, i*160, 240, 160);
-                          }
                         }
-                      }
+                        }
+                    }
 
-                      if (photo < 50) { // checks if the reading from the photoresistor is less than 50
-                      fill(250, 250, 250); // pure white is the fill
-                      ellipse(500, 400, 300, 300); // of this 300 x 300 pixel circle
-                      }
+                    if (photo < 50) { // checks if the reading from the photoresistor is less than 50
+                    fill(250, 250, 250); // pure white is the fill
+                    ellipse(500, 400, 300, 300); // of this 300 x 300 pixel circle
+                    }
 
                     }
 
-                </code>
+                </code><br> <br>
+
+            
             </p>
         </div>
         
