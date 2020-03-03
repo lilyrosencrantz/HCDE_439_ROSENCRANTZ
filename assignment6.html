@@ -18,7 +18,8 @@
             was able to read from the serial port. I imported that data to a Javasript file, where I used the various input values to draw 
             using the draw() function. <br> 
             I was able to write from the website to serial, and then this data was read to the arduino and used to determine whether the LED was on or off.<br>
-            I also used a button on my webpage, which was able to tell when someone had clicked it, and then send information to Serial. The input I sent to Serial was either a 1 or 
+            I also used a button on my webpage, which was able to tell when someone had clicked it, and then send information to Serial. 
+            The led() function allowed me to check if the button had been clicked.
             Kay and Lia helped me with the code for reading and parsing the sensor values in javascript.
             <h2>Operation of Circuit</h2> <br>
             This gif shows the operation of my circuit:<br> <br>
@@ -30,7 +31,7 @@
             was detected, a white circle would show up on the middle of the screen. When a lot of light was detected, the circle 
             would disappear. <br>
             You can see that when I had the photoresistor covered with a towel, the while circle stayed on the screen constantly. 
-            Then, when I shined a light on it the white circle went away. <br> 
+            Then, when I uncovered the photoresistor, the white circle went away. <br> 
             Then, if I clicked the button on the screen, it turned the blue LED on on the breadboard.
           
             <br> <br>
@@ -117,7 +118,8 @@
                         photo = analogRead(photoPin); // sets variable photo to pin of photoresistor
                         int constPhoto = constrain(photo, 30, 900); // constrains input value to range most likely to be read
                         int mapPhoto = map(constPhoto,30, 900, 0, 200); // maps range to smaller range
-
+                        
+                        // learned how to print an array to serial in class from lecture slides :)
                         Serial.print("["); // print [ in serial monitor
                         Serial.print(button); // prints the button reading value in the serial monitor
                         Serial.print(","); // prints a comma between button and photo values
@@ -246,7 +248,7 @@
                         // write 0 to serial so it can be read by arduino
                         serial.write("0");
                     }
-                    // increments buttonSTate so it will toggle appearance, and LED turns off/on
+                    // increments buttonState so it will toggle appearance, and LED turns off/on
                     buttonState++;
                     }
 
