@@ -14,18 +14,47 @@
         <div class="header">
             <h1>Lily's Final Project!</h1>
             <br>Here is all the documentation for my project! <br>
-            
+            First, I have my brainstorms I did to come up with an idea... I wanted to make something to <h3>boogie</h3> in!
             <p>
             <img src="discosuit.jpg" width=400 class="rotateimg90"></a>
             </p> 
-        For my final project I am thinking I will make a disco suit. <br>
-        So far, my ideas for this project include: <br>
-        - Using an accelerometer on each of my limbs to register the intensity of my boogie-ing <br>
-        - Depending on the speed of my dancing, LEDs in the suit would either: <br>
-        ---> Change Color <br>
-        ---> Change intensity <br>
-        ---> Both <br>
-        ---> Blink <br>
+            <br>
+            For my final project I am thinking I will make a disco suit. <br>
+            So far, my ideas for this project include: <br>
+            - Using an accelerometer on each of my limbs to register the intensity of my boogie-ing <br>
+            - Depending on the speed of my dancing, LEDs in the suit would either: <br>
+            ---> Change Color <br>
+            ---> Change intensity <br>
+            ---> Both <br>
+            ---> Blink <br> <br>
+            <br>
+            <h3>Building the project!!</h3> br <br>
+            <h2>Schematic! <br></h2>
+            Here is the schematic for my disco suit! <br>
+
+            <p>
+                <img src="schematic_FINAL.jpg" width=400 class="rotateimg90"></a>
+            </p> <br>
+
+            The RGB LED was connected through my code to the accelerometer. 
+            The RGB LED was connected to the pwm pins 3, 5, and 6. <br>
+
+            I soldered the accelerometer to be able to use it in this project. 
+            I connected Vin to 5V on the arduino; the SCL pin to Digital #13 pin; 
+            the SDA pin to Digital #11 pin; the SDO pin to Digital #12 pin; the CS pin to Digital #10 pin. <br>
+            
+            Here is a close-ip on the schematic for the accelerometer. <br>
+            <p>
+                <img src="accelerometer_schematicFINAL.jpg" width=400 class="rotateimg90"></a>
+            </p> <br>            
+
+            The LED strip was powered by 12V from the wall, 
+            and connected to pin 9 and ground through the N-channel MOSFET transistor. 
+            It was controlled through code by the tilt ball switch. <br>
+
+            The tilt ball switch was connected to pin 4 and ground. <br>
+
+
            
             <!-- This gif shows the operation of my circuit:<br>
             At different levels of light being read by the photoresistor, different things happen to the 
