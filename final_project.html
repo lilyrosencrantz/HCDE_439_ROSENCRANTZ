@@ -13,7 +13,8 @@
     <body style="margin:40;padding:0"> 
         <div class="header">
             <h1>Lily's Final Project!</h1>
-            <br>Here is all the documentation for my project! <br>
+            <br>Here is all the documentation for my project! <br> <br>
+            
             First, I have my brainstorms I did to come up with an idea... I wanted to make something to boogie in!
             <p>
             <img src="discosuit.jpg" width=400 class="rotateimg180"></a>
@@ -28,9 +29,9 @@
             ---> Both <br>
             ---> Blink <br> <br>
             <br>
-            <h3>Building the project!!</h3> <br>
+            <h1>Building the project!!</h1> <br>
             <h2>Schematic! <br></h2>
-            Here is the schematic for my disco suit! <br>
+            Here is the schematic for my disco pants! <br>
 
             <p>
                 <img src="schematic_FINAL.jpg" width=400 class="rotateimg90"></a>
@@ -45,7 +46,7 @@
             
             Here is a close-ip on the schematic for the accelerometer. <br><br>
             <p>
-                <img src="accelerometer_schematicFINAL.jpg" width=400></a>
+                <img src="accelerometer_schematicFINAL.jpg" width=400 class="rotateimg90"></a>
             </p> <br>            
 
             The LED strip was powered by 12V from the wall, 
@@ -55,7 +56,7 @@
             The tilt ball switch was connected to pin 4 and ground. <br>
 
 
-            <h2>Circuit</h2> <br> <br>
+            <br><h2>Circuit</h2> <br>
             To put my project together, I migrated from the large breadboard to the tiny breadboard. 
             This fit perfectly on the Arduino cover, which I used to increase the stability of my project. 
             I tried to solder everything together at first, but the iron was taking 
@@ -66,9 +67,6 @@
 
             Here are images of my circuit. <br> <br>
 
-            <!-- <p>
-                <img src="ard_circFIN.jpg" width=400></a>
-            </p> <br> <br> -->
             <figure>
                 <img src="ard_circFIN.jpg" alt="Circuit" style="width:60%">
                 <figcaption>Circuit zoomed out - alligator clips connecting to pants</figcaption>
@@ -85,7 +83,7 @@
               </figure>
             <br>
             <figure>
-                <img src="RGB_tilt_circ.jpg" alt="Circuit" style="width:60%">
+                <img src="RGB_tilt_circ.jpg" alt="Circuit" style="width:60%" class="rotateimg90">
                 <figcaption>close-up on the tilt-switch and the RGB LED (soldered wires together and heat-shrink wrapped them)</figcaption>
               </figure>
             <br>
@@ -94,6 +92,66 @@
                 <figcaption>A very zoomed-in look at the wiring on my arduino</figcaption>
               </figure>
             <br>
+<br>
+            <h2>Technical Write Up</h2>
+            <h3>Concept:</h3>
+            My concept was to make a suit that would light up depending on how I danced. 
+            My aspirations were pretty big - I wanted to make a suit that would fit right 
+            in if Saturday Night Fever came back in 2020. I love disco and dancing, 
+            and more than those I love being goofy. Making this project was so much 
+            fun because I got to explore my creative side and make something that is 
+            not very practical but fulfills a purpose that makes me happy.
+            <br>
+            <h3>Implementation:</h3>
+            <ul>
+                <li>I had big aspirations for the fidelity of this project. 
+                    I was hoping to make a real bell-bottomed suit, and sew in rainbow LEDs. 
+                    However, the more I thought about it, the less I wanted to spend $50 
+                    on a suit that I likely would not be able to wear out. So… I used an 
+                    old pair of pants that were close to being in the goodwill pile - 
+                    and just made the bottom half. The ‘disco suit’ became a pair of 
+                    ‘disco pants’ and a necklace of sorts.</li>
+                <li>I started by making just the tilt ball switch work 
+                    with the LED strip. Once I could do that, I wanted to give it more 
+                    functionality that just ‘ON’ and ‘OFF.’ So, I made a counter that 
+                    would see how many times the switch had been turned; every 5 times, 
+                    the pants blink instead of turn the LED on continuously.</li>
+                <li>Next, I needed to make the accelerometer work… I ran into trouble 
+                    here because I followed the image on the Adafruit tutorial, not the 
+                    written instructions - the image had the wiring wrong!</li>
+                <li>Once Jasper helped me fix the wiring, I learned how to read the 
+                    data and decided to just use the x-axis acceleration to control the RGB led. 
+                    It changed depending on whether I moved left (turned pink) or right (turned teal).</li>
+                <li>Next, I soldered the tilt ball switch and the RGB LED legs to long wires, 
+                    and the long wires to halves of wires with ends I could put into the Arduino. 
+                    I also soldered wires to the LED strip -- however, one of those connections broke 
+                    while I was home testing my project. I did not have time to go back to Sieg and re-solder, 
+                    so I just used alligator clips instead.</li>
+                <li>I tried to solder wires directly to the breakout board, but the soldering iron was 
+                    not being my friend, and it was taking an excessive amount of time to do just 
+                    one connection. So, I decided I would just attach the tiny breadboard to the 
+                    breakout board, and condense the circuit into that small space without soldering.</li>
+                <li> Not having my project soldered was frustrating during testing - wires kept 
+                    popping out! But I eventually got it sorted out, and was able to 
+                    dance around my room with blinking pants for a while.</li>
+                <li>The RGB LED was on long wires that I just wrapped around my neck like a necklace 
+                    in the end - I mostly had been trying to just get the functionality to work… 
+                    that’s where I would start if I improve this project.</li>
+            </ul>
+            <br> <br>
+            <h2>If I had more time to do this project, I would...</h2>
+            <ul>
+                <li>Map the x, y, and z values from the accelerometer to 0 to 255 so that I can 
+                    use them all to control the RGB led’s color at once. 
+                    I would like a more interesting fuctionality to this part of the project. 
+                    I would also make a more interesting and secure enclosure for it -- 
+                    maybe it could be put into a translucent disco ball on a headband!</li>
+                <li>Get a rainbow led strip, sew it into a really cool pair of disco pants, 
+                    and make it change color based on input from the surroundings - 
+                    maybe find a sensor that could read bass vibrations from the 
+                    music, and match my suit to the music in the room I am dancing in.</li>
+                <li>Solder everything and make an enclosure.</li>
+            </ul> <br> <br>
             <h2>My code</h2> <br>
             Here is my code. Much of the code for the accelerometer is taken from the Adafruit example in Arduino.
             <pre><code>
